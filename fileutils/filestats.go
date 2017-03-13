@@ -6,6 +6,23 @@ import (
     "sort"
 )
 
+func runeFrequencies(filename string) map[rune]int {
+    reader := newBufferedReader(filename)
+    runes := map[rune]int{}
+    for {
+        r, _, err := reader.ReadRune()
+        if err == io.EOF {
+            break
+        } else if err != nil {
+            log.Fatal(err)
+        }
+        if r > 0x19 { // Exclude common control codes
+            runes[r] += 1
+        }
+    }
+    return runes
+}
+
 func NumberOfLines(filename string) int64 {
     reader := newBufferedReader(filename)
     var lines int64

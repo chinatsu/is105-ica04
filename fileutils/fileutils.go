@@ -26,24 +26,6 @@ func newBufferedReader(filename string) (*bufio.Reader) {
     return bufio.NewReader(f)
 }
 
-func runeFrequencies(filename string) map[rune]int {
-    reader := newBufferedReader(filename)
-    runes := map[rune]int{}
-    for {
-        r, _, err := reader.ReadRune()
-        if err == io.EOF {
-            break
-        } else if err != nil {
-            log.Fatal(err)
-        }
-        if r > 0x19 {
-            runes[r] += 1
-        }
-    }
-    return runes
-}
-
-
 // PrintLinesFromFile prints every line in a file including safely escaped
 // sequences for control codes.
 func PrintLinesFromFile(filename string) {
