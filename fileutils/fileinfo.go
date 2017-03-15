@@ -11,7 +11,7 @@ import (
 func PrintFileInfo(filename string) {
     path, err := filepath.Abs(filename)
     check(err)
-    file, err := os.Stat(filename)
+    file, err := os.Lstat(filename)
     check(err)
     b := float64(file.Size())
     kib := b / 1024
@@ -21,13 +21,13 @@ func PrintFileInfo(filename string) {
     fmt.Printf("Size: %.0fB, %fKiB, %fMiB, %.9fGiB\n", b, kib, mib, gib)
     mode := file.Mode()
     // Sorry about the golf
-    m := map[bool]string{true: " ", false: " not "}
-    fmt.Printf("\tIs%sa directory\n", m[mode.IsDir()])
-    fmt.Printf("\tIs%sa regular file\n", m[mode.IsRegular()])
-    fmt.Printf("Unix permission bits: %s\n", file.Mode())
-    fmt.Printf("\tIs%sappend only\n", m[mode&os.ModeAppend != 0])
-    fmt.Printf("\tIs%sa device file\n", m[mode&os.ModeDevice != 0])
-    fmt.Printf("\tIs%sa Unix character device\n", m[(mode&os.ModeDevice != 0)&&(mode&os.ModeCharDevice != 0)])
-    fmt.Printf("\tIs%sa Unix block device\n", m[(mode&os.ModeDevice != 0)&&(mode&os.ModeCharDevice == 0)])
-    fmt.Printf("\tIs%sa symbolic link\n", m[mode&os.ModeSymlink != 0])
+    m := map[bool]string{true: "Is", false: "Is not"}
+    fmt.Printf("\t%s a directory\n", m[mode.IsDir()])
+    fmt.Printf("\t%s a regular file\n", m[mode.IsRegular()])
+    fmt.Printf("Unix permission bits: %s\n", mode)
+    fmt.Printf("\t%s append only\n", m[mode&os.ModeAppend != 0])
+    fmt.Printf("\t%s a device file\n", m[mode&os.ModeDevice != 0])
+    fmt.Printf("\t%s a Unix character device\n", m[(mode&os.ModeDevice != 0)&&(mode&os.ModeCharDevice != 0)])
+    fmt.Printf("\t%s a Unix block device\n", m[(mode&os.ModeDevice != 0)&&(mode&os.ModeCharDevice == 0)])
+    fmt.Printf("\t%s a symbolic link\n", m[mode&os.ModeSymlink != 0])
 }
