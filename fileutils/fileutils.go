@@ -41,4 +41,3 @@ func PrintLinesFromFile(filename string) {
         }
     }
 }
-
