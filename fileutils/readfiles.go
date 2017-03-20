@@ -5,30 +5,37 @@ import (
     "log"
     "io"
     "io/ioutil"
+    "bufio"
 )
 
 // BufioReadLines reads a file line by line and appends it to byteSlice
 // which is then logged to stdout
 func BufioReadLines(filename string) []byte {
-    var byteSlice []byte
-    reader := newBufferedReader(filename)
-    for {
-        line, err := reader.ReadBytes('\n')
-        if err == io.EOF {
-            break
-        } else if err != nil {
-            log.Fatal(err)
-        }
-        byteSlice = append(byteSlice, line...)
+  f, err := os.Open(filename)
+  check(err)
+  defer f.Close()
+  reader := bufio.NewReader(f)
+  var byteSlice []byte
+  for {
+    line, err := reader.ReadBytes('\n')
+    if err == io.EOF {
+      break
+    } else if err != nil {
+      log.Fatal(err)
     }
-    return byteSlice
+  byteSlice = append(byteSlice, line...)
+  }
+  return byteSlice
 }
 
 // BufioReadBytes reads a file byte by byte and appends it to byteSlice
 // which is then logged to stdout
 func BufioReadBytes(filename string) []byte {
     var byteSlice []byte
-    reader := newBufferedReader(filename)
+    f, err := os.Open(filename)
+    check(err)
+    defer f.Close()
+    reader := bufio.NewReader(f)
     for {
         b, err := reader.ReadByte()
         if err == io.EOF {
